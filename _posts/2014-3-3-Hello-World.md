@@ -1,10 +1,14 @@
 ---
 layout: post
-title: You're up and running!
+title: Hello World！
 ---
 
-Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).
+下面是一些常用的数学网站，分享给大家！
 
-![_config.yml]({{ site.baseurl }}/images/config.png)
-
-The easiest way to make your first post is to edit this one. Go into /_posts/ and update the Hello World markdown file. For more instructions head over to the [Jekyll Now repository](https://github.com/barryclark/jekyll-now) on GitHub.
+## 数学网站
+1. [WolframAlpha](https://www.wolframalpha.com/) 
+2. [数字帝国](https://zh.numberempire.com/) 
+1. [博士数学论坛](https://www.math.org.cn/)
+1. [妈叔Latex](https://www.latexlive.com/)
+1. [SimpleTex](https://simpletex.cn/)
+1. [Desmos](https://www.desmos.com/calculator?lang=zh-CN)
