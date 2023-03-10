@@ -1,11 +1,12 @@
 ---
-layout: post
+layout: page
 title: 小工具
+permalink: /tools/
 ---
 
 Hello!下面是一些常用的小工具，分享给大家！
 
-![_config.yml]({{ site.baseurl }}/images/math-header.jpg)
+![_config.yml]({{ site.baseurl }}/images/Technology.jpg)
 
 ## 常用工具
 1. [Everything.zip（电脑文件搜索软件）](https://www.voidtools.com/zh-cn/downloads/)
