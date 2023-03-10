@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 小工具
-permalink: /Tools/
+permalink: /tools/
 ---
 
 一个数学&计算机爱好者的网站。
