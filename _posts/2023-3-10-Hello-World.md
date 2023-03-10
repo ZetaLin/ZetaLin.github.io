@@ -5,6 +5,8 @@ title: Hello World
 
 Hello!下面是一些常用的数学网站，分享给大家！
 
+![_config.yml]({{ site.baseurl }}/images/math-header.jpg)
+
 ## 数学网站
 1. [WolframAlpha](https://www.wolframalpha.com/) 
 2. [数字帝国](https://zh.numberempire.com/) 
