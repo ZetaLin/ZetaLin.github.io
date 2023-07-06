@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hello World
+title: 常用数学网站
 ---
 
 Hello!下面是一些常用的数学网站，分享给大家！
