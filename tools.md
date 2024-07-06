@@ -39,6 +39,7 @@ Hello!下面是一些常用的小工具，分享给大家！
 29. [officetool工具集-pdf加水印](https://www.123pan.com/s/9Rn9-iW1pH.html)
 30. [ContextMenuManager右键管理](https://www.123pan.com/s/9Rn9-iW1pH.html)
 31. [Advanced PDF Password RecoveryPDF密码移除](https://www.123pan.com/s/9Rn9-iW1pH.html)
+32. [TrafficMonitor 网速监控显示](https://wwk.lanzoul.com/iyWQz23oth5g)
 
 
 
