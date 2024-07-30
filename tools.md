@@ -41,5 +41,8 @@ Hello!下面是一些常用的小工具，分享给大家！
 31. [Advanced PDF Password RecoveryPDF密码移除](https://www.123pan.com/s/9Rn9-iW1pH.html)
 32. [TrafficMonitor 网速监控显示](https://wwk.lanzoul.com/iyWQz23oth5g)
 
+![_config.yml]({{ site.baseurl }}/images/赞赏码.png)
+
+
 
 
