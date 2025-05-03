@@ -16,8 +16,8 @@ title: coordinateConvert
 
 ### 2. 高斯坐标（3度带） → 经纬度
 <div class="input-group">
-  <input type="text" id="input-x" placeholder="X（如39448688.855734）" value="39448688.855734">
-  <input type="text" id="input-y" placeholder="Y（如4418598.001397）" value="4418598.001397">
+  <input type="text" id="input-x" placeholder="X（如39448688.855734）" value="39425052.382641">
+  <input type="text" id="input-y" placeholder="Y（如4418598.001397）" value="4420164.214338">
   <button onclick="convertToWGS84()">转换</button>
 </div>
 <p>结果：<span id="wgs84-result" class="mono"></span></p>
