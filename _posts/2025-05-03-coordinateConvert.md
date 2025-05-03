@@ -3,10 +3,10 @@ layout: post
 title: coordinateConvert
 ---
 
-## 经纬度 ↔ 高斯3度带坐标
-（符合中国《GB/T 35764-2017》标准）
+## 经纬度 ↔ 高斯3度带坐标（工程常用的平面XY坐标）
+ 
 
-### 1. 经纬度 → 高斯坐标（3度带）
+### 1. 经纬度 → 平面XY坐标高斯坐标（3度带）
 <div class="input-group">
   <input type="number" id="lat" placeholder="纬度（如39.9）" step="0.000001" value="39.91234512">
   <input type="number" id="lng" placeholder="经度（如116.4）" step="0.000001" value="116.12345623">
@@ -14,7 +14,7 @@ title: coordinateConvert
 </div>
 <p>结果：<span id="gauss-result" class="mono"></span></p>
 
-### 2. 高斯坐标（3度带） → 经纬度
+### 2. 平面XY坐标高斯坐标（3度带） → 经纬度
 <div class="input-group">
   <input type="text" id="input-x" placeholder="X（如39448688.855734）" value="39425052.402438">
   <input type="text" id="input-y" placeholder="Y（如4418598.001397）" value="4420164.227469">
