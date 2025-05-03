@@ -4,7 +4,6 @@ title: coordinateConvert
 ---
 
 ## 经纬度 ↔ 高斯3度带坐标（工程常用的平面XY坐标）
- 
 
 ### 1. 经纬度 → 平面XY坐标高斯坐标（3度带）
 <div class="input-group">
@@ -21,6 +20,11 @@ title: coordinateConvert
   <button onclick="convertToWGS84()">转换</button>
 </div>
 <p>结果：<span id="wgs84-result" class="mono"></span></p>
+
+<div class="disclaimer">
+  <p>为保证数据保密性，如需本地批量转换软件，请戳此：
+  <a href="https://pan.baidu.com/s/1ySwut1CpFLTSkGTVy792Fw?pwd=dyzj" target="_blank">百度网盘下载</a> (提取码: dyzj)</p>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js"></script>
 <script>
@@ -117,5 +121,15 @@ button {
 }
 small {
   color: #666;
+}
+.disclaimer {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 4px solid #2185d0;
+}
+.disclaimer a {
+  color: #2185d0;
+  font-weight: bold;
 }
 </style>
