@@ -89,8 +89,8 @@ function convertToWGS84() {
   
   // 显示结果（验证示例：39448688.855734,4418598.001397 → 116.4,39.9）
   document.getElementById('wgs84-result').innerHTML = `
-    经度 = ${lng.toFixed(6)}° <br>
-    纬度 = ${lat.toFixed(6)}° <br>
+    经度 = ${lng.toFixed(8)}° <br>
+    纬度 = ${lat.toFixed(8)}° <br>
     <small>带号：${zone} | 中央子午线：${centralMeridian}°</small>
   `;
 }
