@@ -71,8 +71,8 @@ function convertToWGS84() {
   const y = parseFloat(document.getElementById('input-y').value);
 
   // 解析带号（8位X坐标前两位）
-  const zone = Math.floor(x / 10000000);
-  const pureX = x - zone * 10000000;
+  const zone = Math.floor(x / 1000000);
+  const pureX = x - zone * 1000000;
   
   // 计算中央子午线
   const centralMeridian = zone * 3;
