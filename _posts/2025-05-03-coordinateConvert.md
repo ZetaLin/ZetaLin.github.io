@@ -8,8 +8,8 @@ title: coordinateConvert
 
 ### 1. 经纬度 → 高斯坐标（3度带）
 <div class="input-group">
-  <input type="number" id="lat" placeholder="纬度（如39.9）" step="0.000001" min="0" max="90" value="39.9">
-  <input type="number" id="lng" placeholder="经度（如116.4）" step="0.000001" min="73" max="136" value="116.4">
+  <input type="number" id="lat" placeholder="纬度（如39.9）" step="0.000001"   value="39.912345">
+  <input type="number" id="lng" placeholder="经度（如116.4）" step="0.000001"  value="116.123456">
   <button onclick="convertToGauss()">转换</button>
 </div>
 <p>结果：<span id="gauss-result" class="mono"></span></p>
@@ -39,11 +39,7 @@ function convertToGauss() {
   const lat = parseFloat(document.getElementById('lat').value);
   const lng = parseFloat(document.getElementById('lng').value);
   
-  // 参数验证
-  if (isNaN(lat) || isNaN(lng) || lng < 73 || lng > 136) {
-    alert("经度需在73°-136°范围内（中国区域）");
-    return;
-  }
+  
 
   // 计算投影参数
   const { zone, centralMeridian } = getGaussParams(lng);
@@ -59,7 +55,7 @@ function convertToGauss() {
   const [x, y] = proj4("EPSG:4490", projCode, [lng, lat]);
   
   // 生成8位X坐标（带号前两位）
-  const xWithPrefix = (zone * 10000000 + x).toFixed(6);
+  const xWithPrefix = (zone * 1000000 + x).toFixed(6);
   
   // 显示结果（验证示例：116.4,39.9 → 39448688.855734,4418598.001397）
   document.getElementById('gauss-result').innerHTML = `
