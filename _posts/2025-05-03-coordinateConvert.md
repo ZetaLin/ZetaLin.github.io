@@ -8,8 +8,8 @@ title: coordinateConvert
 
 ### 1. 经纬度 → 高斯坐标（3度带）
 <div class="input-group">
-  <input type="number" id="lat" placeholder="纬度（如39.9）" step="0.000001"   value="39.912345">
-  <input type="number" id="lng" placeholder="经度（如116.4）" step="0.000001"  value="116.123456">
+  <input type="number" id="lat" placeholder="纬度（如39.9）" step="0.000001" value="39.912345">
+  <input type="number" id="lng" placeholder="经度（如116.4）" step="0.000001" value="116.123456">
   <button onclick="convertToGauss()">转换</button>
 </div>
 <p>结果：<span id="gauss-result" class="mono"></span></p>
@@ -39,8 +39,6 @@ function convertToGauss() {
   const lat = parseFloat(document.getElementById('lat').value);
   const lng = parseFloat(document.getElementById('lng').value);
   
-  
-
   // 计算投影参数
   const { zone, centralMeridian } = getGaussParams(lng);
   const projCode = `CGCS2000_Zone${zone}`;
@@ -57,7 +55,7 @@ function convertToGauss() {
   // 生成8位X坐标（带号前两位）
   const xWithPrefix = (zone * 1000000 + x).toFixed(6);
   
-  // 显示结果（验证示例：116.4,39.9 → 39448688.855734,4418598.001397）
+  // 显示结果（保持原精度）
   document.getElementById('gauss-result').innerHTML = `
     X = ${xWithPrefix} <br>
     Y = ${y.toFixed(6)} <br>
@@ -87,7 +85,7 @@ function convertToWGS84() {
   // 执行转换
   const [lng, lat] = proj4(projCode, "EPSG:4490", [pureX, y]);
   
-  // 显示结果（验证示例：39448688.855734,4418598.001397 → 116.4,39.9）
+  // 修改点：输出精度调整为8位小数（仅显示部分）
   document.getElementById('wgs84-result').innerHTML = `
     经度 = ${lng.toFixed(8)}° <br>
     纬度 = ${lat.toFixed(8)}° <br>
