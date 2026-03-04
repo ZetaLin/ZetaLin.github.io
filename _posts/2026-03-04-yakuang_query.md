@@ -42,5 +42,7 @@
 | 29 | **青海省** | [在线办理入口](https://www.qhzwfw.gov.cn/matterbszndetail.html?taskcode=1163000001500133XN2632015024000) | - |
 | 30 | **宁夏** | [在线办理入口](https://zwfw.nx.gov.cn/bszn.jsp?wbtreeid=7099&deptId=ZZQ137&proId=32302453-a567-4e27-9c6d-d5ed12849fe2&areacode=ZZQ&zntype=all) | - |
 | 31 | **新疆** | [政务服务入口](https://zrzyt.xinjiang.gov.cn/xjgtzy/kcbs/zwfw_list.shtml) | - |
-
+| 32 | **台湾省** | 暂未找到 | - |
+| 33 | **香港特别行政区** | 暂未找到 | - |
+| 34 | **澳门特别行政区** | 暂未找到 | - |
 ---
