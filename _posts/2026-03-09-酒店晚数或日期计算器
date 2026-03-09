@@ -1,0 +1,65 @@
+---
+layout: post
+title: "我的酒店晚数计算器"
+date: 2026-03-09
+categories: tools
+---
+
+<div id="hotel-calc-app" style="max-width: 400px; margin: 20px auto; border: 1px solid #e1e4e8; border-radius: 12px; padding: 20px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: sans-serif;">
+    <h3 style="text-align: center; color: #333; margin-top: 0;">🏨 晚数计算器</h3>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="width: 45%;">
+            <label style="font-size: 12px; color: #666;">入住日期</label>
+            <input type="date" id="inDate" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        </div>
+        <div style="margin-top: 18px; color: #007bff; font-weight: bold;">➜</div>
+        <div style="width: 45%;">
+            <label style="font-size: 12px; color: #666;">离店日期</label>
+            <input type="date" id="outDate" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        </div>
+    </div>
+
+    <div style="background: #f0f7ff; padding: 20px; border-radius: 10px; text-align: center;">
+        <span id="nightRes" style="font-size: 40px; font-weight: bold; color: #007bff;">0</span>
+        <span style="color: #666; font-size: 16px;"> 晚</span>
+    </div>
+
+    <div style="margin-top: 15px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center;">
+        <button onclick="setDays(7)" style="cursor:pointer; background:#007bff; color:#fff; border:none; padding:5px 10px; border-radius:4px; font-size:12px;">+7天</button>
+        <button onclick="setDays(14)" style="cursor:pointer; background:#007bff; color:#fff; border:none; padding:5px 10px; border-radius:4px; font-size:12px;">+14天</button>
+        <button onclick="setDays(30)" style="cursor:pointer; background:#007bff; color:#fff; border:none; padding:5px 10px; border-radius:4px; font-size:12px;">+30天</button>
+    </div>
+</div>
+
+<script>
+    // 使用自执行函数避免全局污染
+    (function() {
+        const inInput = document.getElementById('inDate');
+        const outInput = document.getElementById('outDate');
+        const res = document.getElementById('nightRes');
+
+        // 初始化日期为今天
+        const today = new Date().toISOString().split('T')[0];
+        inInput.value = today;
+
+        function calc() {
+            const d1 = new Date(inInput.value);
+            const d2 = new Date(outInput.value);
+            if (!isNaN(d1) && !isNaN(d2)) {
+                const diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+                res.innerText = diff > 0 ? diff : 0;
+            }
+        }
+
+        window.setDays = function(days) {
+            const start = new Date(inInput.value);
+            start.setDate(start.getDate() + days);
+            outDate.value = start.toISOString().split('T')[0];
+            calc();
+        };
+
+        inInput.addEventListener('change', calc);
+        outInput.addEventListener('change', calc);
+    })();
+</script>
