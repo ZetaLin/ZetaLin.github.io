@@ -31,6 +31,46 @@
       overflow: hidden;
       padding: 1.8rem 1.8rem 2rem;
       transition: all 0.2s;
+      position: relative;
+    }
+
+    /* 右上角主页链接 - 精致小巧 */
+    .home-link {
+      position: absolute;
+      top: 1.8rem;
+      right: 2rem;
+      background: #f1f5f9;
+      color: #1e293b;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.3rem 1rem 0.3rem 0.9rem;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: 1px solid #e2e8f0;
+      transition: 0.15s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      letter-spacing: 0.01em;
+    }
+
+    .home-link:hover {
+      background: #e9edf4;
+      border-color: #cbd5e1;
+      transform: scale(1.02);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .home-link svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: #1e293b;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-top: -1px;
     }
 
     h1 {
@@ -44,6 +84,7 @@
       margin-bottom: 1.5rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid #e9edf4;
+      padding-right: 120px; /* 给右上角链接留空间 */
     }
 
     h1 small {
@@ -304,6 +345,22 @@
       .actions {
         justify-content: center;
       }
+
+      .home-link {
+        position: relative;
+        top: auto;
+        right: auto;
+        align-self: flex-end;
+        margin-bottom: 0.5rem;
+        padding: 0.2rem 0.9rem;
+        font-size: 0.8rem;
+      }
+
+      h1 {
+        padding-right: 0;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -325,9 +382,17 @@
 </head>
 <body>
 <div class="app">
+  <!-- 右上角“回到主页”链接 -->
+  <a href="https://zetalin.top/" class="home-link" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 24 24" width="16" height="16">
+      <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    </svg>
+    回到主页
+  </a>
+
   <h1>
     📄 智能文本差异对比工具
-    <small>简单 · 直观 · 高效 </small>
+    <small>简单 · 直观 · 高效</small>
   </h1>
 
   <div class="toolbar">
