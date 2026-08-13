@@ -34,7 +34,6 @@
       position: relative;
     }
 
-    /* 右上角主页链接 - 精致小巧 */
     .home-link {
       position: absolute;
       top: 1.8rem;
@@ -84,7 +83,7 @@
       margin-bottom: 1.5rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid #e9edf4;
-      padding-right: 120px; /* 给右上角链接留空间 */
+      padding-right: 120px;
     }
 
     h1 small {
@@ -297,7 +296,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      background: rgba(255, 215, 0, 0.3);
+      background: rgba(255, 215, 0, 0.35);
       border-left: 4px solid #e6a100;
       border-radius: 0 6px 6px 0;
       pointer-events: none;
@@ -382,7 +381,6 @@
 </head>
 <body>
 <div class="app">
-  <!-- 右上角“回到主页”链接 -->
   <a href="https://zetalin.top/" class="home-link" target="_blank" rel="noopener noreferrer">
     <svg viewBox="0 0 24 24" width="16" height="16">
       <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -392,14 +390,13 @@
 
   <h1>
     📄 智能文本差异对比工具
-    <small>简单 · 直观 · 高效</small>
+    <small>语义对齐 · 空行感知</small>
   </h1>
 
   <div class="toolbar">
     <div class="actions">
       <button class="btn btn-primary" id="compareBtn">🔍 智能对比</button>
       <button class="btn btn-outline" id="clearBtn">🗑️ 清空</button>
-      <button class="btn btn-outline" id="resetBtn">↺ 重置示例</button>
     </div>
     <div class="info-badge">
       <span>⚡ 不同行 </span>
@@ -410,7 +407,7 @@
   <div class="compare-grid">
     <div class="col" id="leftCol">
       <div class="col-header">
-        <span>📝 左侧文本</span>
+        <span>📝 基础文本</span>
         <span class="count" id="leftCount">0 行</span>
       </div>
       <div class="text-area-wrap" id="leftWrap">
@@ -418,7 +415,7 @@
           <div class="line-numbers" id="leftLineNumbers"></div>
           <div class="text-area-wrapper">
             <div class="highlight-layer" id="leftHighlightLayer"></div>
-            <textarea class="text-area" id="leftText" placeholder="粘贴或输入左侧文本…" spellcheck="false"></textarea>
+            <textarea class="text-area" id="leftText" placeholder="粘贴或输入基础文本…" spellcheck="false"></textarea>
           </div>
         </div>
       </div>
@@ -426,7 +423,7 @@
 
     <div class="col" id="rightCol">
       <div class="col-header">
-        <span>📝 右侧文本</span>
+        <span>📝 对比文本</span>
         <span class="count" id="rightCount">0 行</span>
       </div>
       <div class="text-area-wrap" id="rightWrap">
@@ -434,7 +431,7 @@
           <div class="line-numbers" id="rightLineNumbers"></div>
           <div class="text-area-wrapper">
             <div class="highlight-layer" id="rightHighlightLayer"></div>
-            <textarea class="text-area" id="rightText" placeholder="粘贴或输入右侧文本…" spellcheck="false"></textarea>
+            <textarea class="text-area" id="rightText" placeholder="粘贴或输入对比文本…" spellcheck="false"></textarea>
           </div>
         </div>
       </div>
@@ -456,25 +453,197 @@
 
     const compareBtn = document.getElementById('compareBtn');
     const clearBtn = document.getElementById('clearBtn');
-    const resetBtn = document.getElementById('resetBtn');
 
-    // 示例文本（点击"重置示例"时使用）
-    const sampleLeft = `智能对比工具
-  支持行级差异检测
-  左侧文本区域
-  第三行有差异
-  第五行相同内容
-  第六行左侧独有
-  第七行一致`;
+    // ============================================================
+    // 核心：语义对齐 + 空行位置感知对比
+    // 1. 提取非空行按顺序对齐（数学对数学，语文对语文）
+    // 2. 对齐后，检测每两个相邻非空行之间的空行数量
+    // 3. 如果空行数量不同，在对应位置标记空行差异
+    // ============================================================
+    function performDiff() {
+      const leftFullLines = leftText.value.split('\n');
+      const rightFullLines = rightText.value.split('\n');
 
-    const sampleRight = `智能对比工具
-  支持行级差异检测
-  右侧文本区域
-  第三行有差异
-  第五行相同内容
-  第六行右侧新增
-  第七行一致`;
+      clearHighlights();
+      updateCounts();
+      updateLineNumbers(leftText, leftLineNumbers);
+      updateLineNumbers(rightText, rightLineNumbers);
 
+      // ---- 第一步：提取非空行及其位置 ----
+      function extractContent(lines) {
+        const result = [];
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].trim() !== '') {
+            result.push({ line: lines[i], index: i });
+          }
+        }
+        return result;
+      }
+
+      const leftContent = extractContent(leftFullLines);
+      const rightContent = extractContent(rightFullLines);
+
+      // ---- 第二步：按顺序对齐非空行，标记内容差异 ----
+      const leftStyle = window.getComputedStyle(leftText);
+      const rightStyle = window.getComputedStyle(rightText);
+      const leftLineHeight = parseFloat(leftStyle.lineHeight) || parseFloat(leftStyle.fontSize) * 1.6;
+      const rightLineHeight = parseFloat(rightStyle.lineHeight) || parseFloat(rightStyle.fontSize) * 1.6;
+      const leftPaddingTop = parseFloat(leftStyle.paddingTop) || 0;
+      const rightPaddingTop = parseFloat(rightStyle.paddingTop) || 0;
+
+      let diffCount = 0;
+      const minLen = Math.min(leftContent.length, rightContent.length);
+
+      // 用于记录哪些非空行已经被匹配
+      const leftMatched = new Array(leftContent.length).fill(false);
+      const rightMatched = new Array(rightContent.length).fill(false);
+
+      // 按位置匹配非空行
+      for (let i = 0; i < minLen; i++) {
+        const leftItem = leftContent[i];
+        const rightItem = rightContent[i];
+        if (leftItem.line !== rightItem.line) {
+          diffCount++;
+          addHighlight(leftHighlightLayer, leftItem.index, leftLineHeight, leftPaddingTop);
+          addHighlight(rightHighlightLayer, rightItem.index, rightLineHeight, rightPaddingTop);
+        }
+        leftMatched[i] = true;
+        rightMatched[i] = true;
+      }
+
+      // 处理左侧多余的非空行
+      for (let i = minLen; i < leftContent.length; i++) {
+        diffCount++;
+        addHighlight(leftHighlightLayer, leftContent[i].index, leftLineHeight, leftPaddingTop);
+      }
+
+      // 处理右侧多余的非空行
+      for (let i = minLen; i < rightContent.length; i++) {
+        diffCount++;
+        addHighlight(rightHighlightLayer, rightContent[i].index, rightLineHeight, rightPaddingTop);
+      }
+
+      // ---- 第三步：检测空行位置差异 ----
+      // 在每两个相邻的非空行之间，检查空行数量是否一致
+      function getBlankLinesBetween(lines, contentItems, fromIdx, toIdx) {
+        // fromIdx 和 toIdx 是 contentItems 的索引
+        const startIdx = contentItems[fromIdx].index;
+        const endIdx = contentItems[toIdx].index;
+        let blankCount = 0;
+        for (let i = startIdx + 1; i < endIdx; i++) {
+          if (lines[i].trim() === '') {
+            blankCount++;
+          }
+        }
+        return blankCount;
+      }
+
+      // 获取某一侧从 startContentIdx 到 endContentIdx 之间的空行行号列表（用于高亮）
+      function getBlankLineIndices(lines, contentItems, fromIdx, toIdx) {
+        const startIdx = contentItems[fromIdx].index;
+        const endIdx = contentItems[toIdx].index;
+        const indices = [];
+        for (let i = startIdx + 1; i < endIdx; i++) {
+          if (lines[i].trim() === '') {
+            indices.push(i);
+          }
+        }
+        return indices;
+      }
+
+      // 对比每一对相邻的非空行之间的空行数量
+      const leftPairCount = Math.max(0, leftContent.length - 1);
+      const rightPairCount = Math.max(0, rightContent.length - 1);
+      const maxPairs = Math.max(leftPairCount, rightPairCount);
+
+      for (let p = 0; p < maxPairs; p++) {
+        // 如果两侧都有这对相邻非空行
+        if (p < leftPairCount && p < rightPairCount) {
+          const leftBlankCount = getBlankLinesBetween(leftFullLines, leftContent, p, p + 1);
+          const rightBlankCount = getBlankLinesBetween(rightFullLines, rightContent, p, p + 1);
+
+          if (leftBlankCount !== rightBlankCount) {
+            // 空行数量不同，标记两侧的空行（取交集或各自标记）
+            const leftBlankIndices = getBlankLineIndices(leftFullLines, leftContent, p, p + 1);
+            const rightBlankIndices = getBlankLineIndices(rightFullLines, rightContent, p, p + 1);
+
+            // 标记左侧空行
+            for (const idx of leftBlankIndices) {
+              diffCount++;
+              addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
+            }
+            // 标记右侧空行
+            for (const idx of rightBlankIndices) {
+              diffCount++;
+              addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
+            }
+          }
+        } else if (p < leftPairCount) {
+          // 左侧有这对，右侧没有（右侧非空行数量少）
+          const leftBlankIndices = getBlankLineIndices(leftFullLines, leftContent, p, p + 1);
+          for (const idx of leftBlankIndices) {
+            diffCount++;
+            addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
+          }
+        } else if (p < rightPairCount) {
+          // 右侧有这对，左侧没有
+          const rightBlankIndices = getBlankLineIndices(rightFullLines, rightContent, p, p + 1);
+          for (const idx of rightBlankIndices) {
+            diffCount++;
+            addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
+          }
+        }
+      }
+
+      // ---- 第四步：处理开头和结尾的空行 ----
+      // 开头空行
+      const leftLeadingBlanks = [];
+      for (let i = 0; i < leftFullLines.length; i++) {
+        if (leftFullLines[i].trim() === '') leftLeadingBlanks.push(i);
+        else break;
+      }
+      const rightLeadingBlanks = [];
+      for (let i = 0; i < rightFullLines.length; i++) {
+        if (rightFullLines[i].trim() === '') rightLeadingBlanks.push(i);
+        else break;
+      }
+      if (leftLeadingBlanks.length !== rightLeadingBlanks.length) {
+        for (const idx of leftLeadingBlanks) {
+          diffCount++;
+          addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
+        }
+        for (const idx of rightLeadingBlanks) {
+          diffCount++;
+          addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
+        }
+      }
+
+      // 结尾空行
+      const leftTrailingBlanks = [];
+      for (let i = leftFullLines.length - 1; i >= 0; i--) {
+        if (leftFullLines[i].trim() === '') leftTrailingBlanks.push(i);
+        else break;
+      }
+      const rightTrailingBlanks = [];
+      for (let i = rightFullLines.length - 1; i >= 0; i--) {
+        if (rightFullLines[i].trim() === '') rightTrailingBlanks.push(i);
+        else break;
+      }
+      if (leftTrailingBlanks.length !== rightTrailingBlanks.length) {
+        for (const idx of leftTrailingBlanks) {
+          diffCount++;
+          addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
+        }
+        for (const idx of rightTrailingBlanks) {
+          diffCount++;
+          addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
+        }
+      }
+
+      diffCountSpan.textContent = diffCount;
+    }
+
+    // ----- 辅助函数 -----
     function updateLineNumbers(textarea, lineNumbersDiv) {
       const lines = textarea.value.split('\n');
       const lineCount = lines.length;
@@ -514,56 +683,12 @@
       marker.style.right = '0px';
       marker.style.top = `${lineIndex * lineHeight + paddingTop}px`;
       marker.style.height = `${lineHeight}px`;
-      marker.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
+      marker.style.backgroundColor = 'rgba(255, 215, 0, 0.35)';
       marker.style.borderLeft = '4px solid #e6a100';
       marker.style.borderRadius = '0 6px 6px 0';
       marker.style.pointerEvents = 'none';
       marker.style.zIndex = '1';
       layer.appendChild(marker);
-    }
-
-    function performDiff() {
-      const leftLines = leftText.value.split('\n');
-      const rightLines = rightText.value.split('\n');
-
-      clearHighlights();
-      updateCounts();
-      updateLineNumbers(leftText, leftLineNumbers);
-      updateLineNumbers(rightText, rightLineNumbers);
-
-      if (leftLines.length === 0 && rightLines.length === 0) {
-        diffCountSpan.textContent = '0';
-        return;
-      }
-
-      const leftStyle = window.getComputedStyle(leftText);
-      const rightStyle = window.getComputedStyle(rightText);
-
-      const leftLineHeight = parseFloat(leftStyle.lineHeight) || parseFloat(leftStyle.fontSize) * 1.6;
-      const rightLineHeight = parseFloat(rightStyle.lineHeight) || parseFloat(rightStyle.fontSize) * 1.6;
-
-      const leftPaddingTop = parseFloat(leftStyle.paddingTop) || 0;
-      const rightPaddingTop = parseFloat(rightStyle.paddingTop) || 0;
-
-      const maxLen = Math.max(leftLines.length, rightLines.length);
-      let diffCount = 0;
-
-      for (let i = 0; i < maxLen; i++) {
-        const leftLine = i < leftLines.length ? leftLines[i] : '';
-        const rightLine = i < rightLines.length ? rightLines[i] : '';
-
-        if (leftLine !== rightLine) {
-          diffCount++;
-          if (i < leftLines.length) {
-            addHighlight(leftHighlightLayer, i, leftLineHeight, leftPaddingTop);
-          }
-          if (i < rightLines.length) {
-            addHighlight(rightHighlightLayer, i, rightLineHeight, rightPaddingTop);
-          }
-        }
-      }
-
-      diffCountSpan.textContent = diffCount;
     }
 
     function refreshDiff() {
@@ -582,20 +707,11 @@
       diffCountSpan.textContent = '0';
     }
 
-    function loadSample() {
-      leftText.value = sampleLeft;
-      rightText.value = sampleRight;
-      refreshDiff();
-    }
-
+    // ----- 事件绑定 -----
     compareBtn.addEventListener('click', refreshDiff);
 
     clearBtn.addEventListener('click', function() {
       clearAll();
-    });
-
-    resetBtn.addEventListener('click', function() {
-      loadSample();
     });
 
     let inputTimer;
@@ -634,10 +750,10 @@
       }, 200);
     });
 
-    // 初始化：不加载示例，留空
+    // 初始化：完全空白
     clearAll();
 
-    console.log('✅ 文本对比工具已启动 · 统一高亮 + 行号');
+    console.log('✅ 语义对齐 + 空行感知文本对比工具已启动');
   })();
 </script>
 </body>
