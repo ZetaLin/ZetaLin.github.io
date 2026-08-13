@@ -7,8 +7,11 @@ permalink: /tools/
 Hello!下面是一些常用的小工具，分享给大家！
 
 ![_config.yml]({{ site.baseurl }}/images/Technology.jpg)
+## 实用工具集（原创开发）
 
-## 常用工具
+- [📄 智能文本对比工具](/compare.html) - 行级差异高亮，支持双栏对比与行号显示。
+  
+## 常用工具（收集于互联网）
 1. [Everything.zip（电脑文件搜索软件）](https://www.voidtools.com/zh-cn/downloads/)
 2. [ScreenToGif录屏工具](https://www.screentogif.com/)
 3. [OneNote2016（笔记工具）](https://www.onenote.com/download?omkt=zh-CN)
