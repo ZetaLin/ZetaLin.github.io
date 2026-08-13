@@ -169,7 +169,6 @@
       position: relative;
     }
 
-    /* 行号与文本容器 */
     .line-numbered-area {
       display: flex;
       width: 100%;
@@ -241,7 +240,6 @@
       background: rgba(255, 255, 255, 0.5);
     }
 
-    /* 高亮层 — 位于文本下方，行号上方 */
     .highlight-layer {
       position: absolute;
       top: 0;
@@ -266,7 +264,6 @@
       transition: background 0.1s;
     }
 
-    /* 滚动条一致 */
     .text-area::-webkit-scrollbar,
     .line-numbers::-webkit-scrollbar {
       width: 6px;
@@ -289,7 +286,6 @@
       background: #a0aec0;
     }
 
-    /* 响应式 */
     @media (max-width: 760px) {
       .compare-grid {
         grid-template-columns: 1fr;
@@ -330,8 +326,8 @@
 <body>
 <div class="app">
   <h1>
-    📄 文本对比
-    <small>行级差异 · 统一高亮 · 带行号</small>
+    📄 智能文本差异对比工具
+    <small>简单 · 直观 · 高效 </small>
   </h1>
 
   <div class="toolbar">
@@ -347,7 +343,6 @@
   </div>
 
   <div class="compare-grid">
-    <!-- 左侧 -->
     <div class="col" id="leftCol">
       <div class="col-header">
         <span>📝 左侧文本</span>
@@ -364,7 +359,6 @@
       </div>
     </div>
 
-    <!-- 右侧 -->
     <div class="col" id="rightCol">
       <div class="col-header">
         <span>📝 右侧文本</span>
@@ -385,7 +379,6 @@
 
 <script>
   (function() {
-    // DOM
     const leftText = document.getElementById('leftText');
     const rightText = document.getElementById('rightText');
     const leftLineNumbers = document.getElementById('leftLineNumbers');
@@ -400,7 +393,7 @@
     const clearBtn = document.getElementById('clearBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // 示例文本
+    // 示例文本（点击"重置示例"时使用）
     const sampleLeft = `智能对比工具
   支持行级差异检测
   左侧文本区域
@@ -417,7 +410,6 @@
   第六行右侧新增
   第七行一致`;
 
-    // 更新行号显示
     function updateLineNumbers(textarea, lineNumbersDiv) {
       const lines = textarea.value.split('\n');
       const lineCount = lines.length;
@@ -425,17 +417,12 @@
       for (let i = 1; i <= lineCount; i++) {
         html += `<span>${i}</span>`;
       }
-      // 如果没有行，占位
       if (lineCount === 0) {
         html = '<span>1</span>';
       }
       lineNumbersDiv.innerHTML = html;
-
-      // 同步行号与文本滚动
-      // 行号高度与文本区对齐，由flex布局自动撑开
     }
 
-    // 更新统计
     function updateCounts() {
       const leftLines = leftText.value.split('\n');
       const rightLines = rightText.value.split('\n');
@@ -443,31 +430,17 @@
       rightCountSpan.textContent = `${rightLines.length} 行`;
     }
 
-    // 清除高亮
     function clearHighlights() {
       leftHighlightLayer.innerHTML = '';
       rightHighlightLayer.innerHTML = '';
     }
 
-    // 同步滚动：让行号区域与文本域滚动同步
     function syncScroll(textarea, lineNumbersDiv) {
-      // 行号区域滚动与textarea同步
-      const wrapper = textarea.closest('.text-area-wrapper');
-      if (!wrapper) return;
-      // 因为行号在另一个容器，但都在同一个 flex 容器中，滚动由 textarea 控制
-      // 由于 line-numbers 和 textarea 在不同的 div 中，但父容器 .line-numbered-area 是 flex
-      // textarea 滚动时，需要让 line-numbers 滚动跟随
-      // 但 flex 布局中，line-numbers 高度由内容撑开，但 overflow 为 hidden
-      // 我们改为让 line-numbers 也 overflow: auto 并同步 scrollTop
-      // 但 line-numbers 不滚动，显示所有行号，跟随 textarea 滚动视觉即可。
-      // 更可靠：让 line-numbers 同步 scrollTop
-      const lineNumbers = lineNumbersDiv;
-      if (lineNumbers) {
-        lineNumbers.scrollTop = textarea.scrollTop;
+      if (lineNumbersDiv) {
+        lineNumbersDiv.scrollTop = textarea.scrollTop;
       }
     }
 
-    // 添加高亮 (统一颜色)
     function addHighlight(layer, lineIndex, lineHeight, paddingTop) {
       const marker = document.createElement('div');
       marker.className = 'diff-line-marker';
@@ -484,7 +457,6 @@
       layer.appendChild(marker);
     }
 
-    // 核心对比
     function performDiff() {
       const leftLines = leftText.value.split('\n');
       const rightLines = rightText.value.split('\n');
@@ -529,15 +501,12 @@
       diffCountSpan.textContent = diffCount;
     }
 
-    // 刷新
     function refreshDiff() {
       performDiff();
-      // 同步滚动
       syncScroll(leftText, leftLineNumbers);
       syncScroll(rightText, rightLineNumbers);
     }
 
-    // 清空
     function clearAll() {
       leftText.value = '';
       rightText.value = '';
@@ -548,14 +517,12 @@
       diffCountSpan.textContent = '0';
     }
 
-    // 加载示例
     function loadSample() {
       leftText.value = sampleLeft;
       rightText.value = sampleRight;
       refreshDiff();
     }
 
-    // 事件绑定
     compareBtn.addEventListener('click', refreshDiff);
 
     clearBtn.addEventListener('click', function() {
@@ -566,18 +533,16 @@
       loadSample();
     });
 
-    // 输入自动对比 (防抖)
     let inputTimer;
     function autoDiff() {
       clearTimeout(inputTimer);
-      inputTimer = setTimeout(() => {
+      inputTimer = setTimeout(function() {
         refreshDiff();
       }, 300);
     }
 
     leftText.addEventListener('input', function() {
       autoDiff();
-      // 更新行号
       updateLineNumbers(leftText, leftLineNumbers);
       syncScroll(leftText, leftLineNumbers);
     });
@@ -588,7 +553,6 @@
       syncScroll(rightText, rightLineNumbers);
     });
 
-    // 滚动同步
     leftText.addEventListener('scroll', function() {
       syncScroll(leftText, leftLineNumbers);
     });
@@ -597,17 +561,16 @@
       syncScroll(rightText, rightLineNumbers);
     });
 
-    // 窗口resize重新计算
     let resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
+      resizeTimer = setTimeout(function() {
         refreshDiff();
       }, 200);
     });
 
-    // 初始化
-    loadSample();
+    // 初始化：不加载示例，留空
+    clearAll();
 
     console.log('✅ 文本对比工具已启动 · 统一高亮 + 行号');
   })();
