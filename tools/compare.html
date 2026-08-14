@@ -288,7 +288,7 @@
       color: #b71c1c;
       border-bottom: 2px solid #d84315;
       border-radius: 2px;
-      font-weight: 600;
+      /* 重点修复：去掉了 font-weight: 600，防止字符变宽导致顶层和底层的光标/文本错位 */
     }
 
     .text-area::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -385,7 +385,6 @@
     const PADDING_TOP = 12;
     const showInlineDiff = true; 
 
-    // 双侧同步滚动状态控制
     let isCrossSyncScroll = true;
     let isSyncingLeft = false;
     let isSyncingRight = false;
@@ -397,7 +396,6 @@
       this.classList.toggle('active', !isCrossSyncScroll);
     });
 
-    // 一键到顶部 / 到底部功能
     document.getElementById('scrollTopBtn').addEventListener('click', function() {
       leftText.scrollTo({ top: 0, behavior: 'smooth' });
       rightText.scrollTo({ top: 0, behavior: 'smooth' });
@@ -408,7 +406,6 @@
       rightText.scrollTo({ top: rightText.scrollHeight, behavior: 'smooth' });
     });
 
-    // 内部对齐滚动 (处理行号和渲染层)
     function syncInnerScroll(textarea, lineNumbers, backdrop, highlight) {
       lineNumbers.scrollTop = textarea.scrollTop;
       backdrop.style.transform = `translate(-${textarea.scrollLeft}px, -${textarea.scrollTop}px)`;
@@ -439,21 +436,35 @@
       }
     });
 
+    // 重点修复：通过翻转字符串进行 DP 对比，使得差异标记推迟到重复字符的末尾
     function getInlineDiffs(s1, s2) {
-      const len1 = s1.length, len2 = s2.length;
+      const r1 = s1.split('').reverse().join('');
+      const r2 = s2.split('').reverse().join('');
+      const len1 = r1.length, len2 = r2.length;
       const dp = Array(len1 + 1).fill(0).map(() => Array(len2 + 1).fill(0));
+      
       for (let i = 1; i <= len1; i++) {
         for (let j = 1; j <= len2; j++) {
-          if (s1[i - 1] === s2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+          if (r1[i - 1] === r2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
           else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
         }
       }
+      
       let i = len1, j = len2;
       const diffIndices1 = new Set(), diffIndices2 = new Set();
+      
       while (i > 0 || j > 0) {
-        if (i > 0 && j > 0 && s1[i - 1] === s2[j - 1]) { i--; j--; }
-        else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) { diffIndices2.add(--j); }
-        else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) { diffIndices1.add(--i); }
+        if (i > 0 && j > 0 && r1[i - 1] === r2[j - 1]) { 
+          i--; j--; 
+        }
+        else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) { 
+          j--;
+          diffIndices2.add(len2 - 1 - j); // 转换回原字符串正确的索引
+        }
+        else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) { 
+          i--;
+          diffIndices1.add(len1 - 1 - i); // 转换回原字符串正确的索引
+        }
       }
       return { diffIndices1, diffIndices2 };
     }
