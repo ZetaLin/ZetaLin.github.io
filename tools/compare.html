@@ -30,7 +30,6 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       padding: 1.8rem 1.8rem 2rem;
-      transition: all 0.2s;
       position: relative;
     }
 
@@ -51,14 +50,12 @@
       border: 1px solid #e2e8f0;
       transition: 0.15s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-      letter-spacing: 0.01em;
     }
 
     .home-link:hover {
       background: #e9edf4;
       border-color: #cbd5e1;
       transform: scale(1.02);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
 
     .home-link svg {
@@ -69,13 +66,11 @@
       stroke-width: 2.2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      margin-top: -1px;
     }
 
     h1 {
       font-weight: 500;
       font-size: 1.8rem;
-      letter-spacing: -0.3px;
       color: #1e293b;
       display: flex;
       align-items: center;
@@ -83,7 +78,6 @@
       margin-bottom: 1.5rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid #e9edf4;
-      padding-right: 120px;
     }
 
     h1 small {
@@ -101,14 +95,20 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 0.8rem 1.2rem;
+      gap: 0.8rem;
       margin-bottom: 1.5rem;
     }
 
     .actions {
       display: flex;
-      flex-wrap: wrap;
       gap: 0.6rem;
+      align-items: center;
+    }
+
+    .right-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
     }
 
     .btn {
@@ -123,34 +123,24 @@
       transition: 0.15s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      gap: 0.35rem;
     }
 
-    .btn-primary {
-      background: #1e293b;
-      border-color: #1e293b;
-      color: white;
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    .btn-primary:hover {
-      background: #0f172a;
-      border-color: #0f172a;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border-color: #d0d8e5;
-    }
-
-    .btn-outline:hover {
-      background: #f1f5f9;
-      border-color: #b0c0d4;
-    }
-
-    .btn:active {
-      transform: scale(0.96);
-    }
+    .btn-primary { background: #1e293b; border-color: #1e293b; color: white; }
+    .btn-primary:hover { background: #0f172a; border-color: #0f172a; }
+    .btn-outline:hover { background: #f1f5f9; border-color: #b0c0d4; }
+    .btn.active { background: #e2e8f0; border-color: #94a3b8; }
+    .btn:active { transform: scale(0.96); }
 
     .info-badge {
       font-size: 0.8rem;
@@ -158,24 +148,19 @@
       padding: 0.3rem 1rem;
       border-radius: 30px;
       color: #334155;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      border: 1px solid #e2e8f0;
     }
 
     .compare-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.2rem;
-      margin-top: 0.2rem;
     }
 
     .col {
       background: #ffffff;
       border-radius: 1.2rem;
       border: 1px solid #eef2f8;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.01);
-      transition: border 0.15s;
       display: flex;
       flex-direction: column;
     }
@@ -183,13 +168,11 @@
     .col-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       padding: 0.7rem 1.2rem;
       background: #fafcff;
       border-bottom: 1px solid #eef2f8;
       border-radius: 1.2rem 1.2rem 0 0;
       font-weight: 500;
-      color: #1e293b;
       font-size: 0.9rem;
     }
 
@@ -198,14 +181,12 @@
       padding: 0.1rem 0.7rem;
       border-radius: 20px;
       font-size: 0.7rem;
-      font-weight: 500;
       color: #475569;
     }
 
     .text-area-wrap {
-      padding: 0.8rem 0.8rem 0.8rem 0.8rem;
-      flex: 1;
-      min-height: 400px;
+      padding: 0.8rem;
+      height: 500px;
       position: relative;
     }
 
@@ -213,225 +194,171 @@
       display: flex;
       width: 100%;
       height: 100%;
-      min-height: 400px;
       background: #fcfdff;
       border-radius: 0.6rem;
       border: 1px solid #eef2f8;
       overflow: hidden;
-      position: relative;
     }
 
     .line-numbers {
-      background: #f8fafc;
+      background: #fafcff;
       color: #94a3b8;
       font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.8rem;
-      line-height: 1.6;
-      padding: 0.8rem 0.4rem 0.8rem 0.8rem;
+      font-size: 14px;
+      line-height: 24px;
+      padding: 12px 6px 12px 12px;
       text-align: right;
       user-select: none;
-      min-width: 2.8rem;
-      white-space: pre-wrap;
-      word-break: keep-all;
+      min-width: 3.2rem;
       border-right: 1px solid #e9edf4;
-      flex-shrink: 0;
-      overflow: hidden;
-      position: relative;
-      z-index: 2;
-      background: #fafcff;
-      letter-spacing: 0.02em;
+      overflow: hidden; 
     }
 
     .line-numbers span {
       display: block;
-      padding: 0 0.2rem;
+      height: 24px;
     }
 
     .text-area-wrapper {
       flex: 1;
       position: relative;
       background: transparent;
-      min-height: 400px;
+      overflow: hidden;
+    }
+
+    .text-area, .text-backdrop, .highlight-layer {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 24px;
+      padding: 12px;
+      white-space: pre;
+      tab-size: 4;
+      margin: 0;
     }
 
     .text-area {
       width: 100%;
       height: 100%;
-      min-height: 400px;
-      padding: 0.8rem 0.8rem 0.8rem 0.6rem;
       border: none;
       outline: none;
-      resize: vertical;
-      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      resize: none; 
       background: transparent;
-      color: #0b1a2b;
-      letter-spacing: 0.01em;
-      tab-size: 2;
-      white-space: pre-wrap;
-      word-break: break-word;
+      color: transparent; 
+      caret-color: #1e293b;
+      overflow: auto;
       position: relative;
       z-index: 3;
-      caret-color: #1e293b;
     }
 
-    .text-area:focus {
-      background: rgba(255, 255, 255, 0.5);
+    .text-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: max-content;
+      color: #0b1a2b;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .text-backdrop div {
+      height: 24px; 
     }
 
     .highlight-layer {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
+      min-width: 100%;
       pointer-events: none;
       z-index: 1;
-      overflow: hidden;
-      border-radius: 0.4rem;
     }
 
     .diff-line-marker {
       position: absolute;
-      left: 0;
-      right: 0;
-      background: rgba(255, 215, 0, 0.35);
+      left: 12px;
+      right: 12px;
+      background: rgba(255, 215, 0, 0.25);
       border-left: 4px solid #e6a100;
       border-radius: 0 6px 6px 0;
-      pointer-events: none;
-      z-index: 1;
-      transition: background 0.1s;
+      height: 24px;
     }
 
-    .text-area::-webkit-scrollbar,
-    .line-numbers::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    .inline-diff-char {
+      background-color: rgba(230, 81, 0, 0.35);
+      color: #b71c1c;
+      border-bottom: 2px solid #d84315;
+      border-radius: 2px;
+      font-weight: 600;
     }
 
-    .text-area::-webkit-scrollbar-track,
-    .line-numbers::-webkit-scrollbar-track {
-      background: #f1f4f9;
-      border-radius: 6px;
-    }
-
-    .text-area::-webkit-scrollbar-thumb,
-    .line-numbers::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 6px;
-    }
-
-    .text-area::-webkit-scrollbar-thumb:hover {
-      background: #a0aec0;
-    }
-
-    @media (max-width: 760px) {
-      .compare-grid {
-        grid-template-columns: 1fr;
-        gap: 1.8rem;
-      }
-
-      .app {
-        padding: 1.2rem;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .actions {
-        justify-content: center;
-      }
-
-      .home-link {
-        position: relative;
-        top: auto;
-        right: auto;
-        align-self: flex-end;
-        margin-bottom: 0.5rem;
-        padding: 0.2rem 0.9rem;
-        font-size: 0.8rem;
-      }
-
-      h1 {
-        padding-right: 0;
-        flex-wrap: wrap;
-        gap: 0.3rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .btn {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-    }
-
-    .text-muted {
-      color: #64748b;
-      font-weight: 400;
-    }
+    .text-area::-webkit-scrollbar { width: 8px; height: 8px; }
+    .text-area::-webkit-scrollbar-track { background: #f1f4f9; }
+    .text-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .text-area::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
   </style>
 </head>
 <body>
 <div class="app">
   <a href="https://zetalin.top/" class="home-link" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 24 24" width="16" height="16">
-      <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-    </svg>
+    <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
     回到主页
   </a>
 
-  <h1>
-    📄 智能文本差异对比工具
-    <small>语义对齐 · 空行感知</small>
-  </h1>
+  <h1>📄 智能文本差异对比工具<small>语义对齐 · 空行感知</small></h1>
 
   <div class="toolbar">
     <div class="actions">
       <button class="btn btn-primary" id="compareBtn">🔍 智能对比</button>
+      <button class="btn btn-outline" id="syncScrollBtn">🔄 同步滚动：开启</button>
       <button class="btn btn-outline" id="clearBtn">🗑️ 清空</button>
     </div>
-    <div class="info-badge">
-      <span>⚡ 不同行 </span>
-      <span id="diffCount" style="font-weight:600; min-width:2rem;">0</span>
+    
+    <div class="right-tools">
+      <div class="info-badge">
+        <span>⚡ 不同行 </span>
+        <span id="diffCount" style="font-weight:600;">0</span>
+      </div>
+      <button class="btn btn-outline" id="scrollTopBtn" title="滚动到顶部">
+        <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        顶部
+      </button>
+      <button class="btn btn-outline" id="scrollBottomBtn" title="滚动到底部">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        底部
+      </button>
     </div>
   </div>
 
   <div class="compare-grid">
-    <div class="col" id="leftCol">
+    <div class="col">
       <div class="col-header">
         <span>📝 基础文本</span>
         <span class="count" id="leftCount">0 行</span>
       </div>
-      <div class="text-area-wrap" id="leftWrap">
-        <div class="line-numbered-area" id="leftNumberedArea">
+      <div class="text-area-wrap">
+        <div class="line-numbered-area">
           <div class="line-numbers" id="leftLineNumbers"></div>
           <div class="text-area-wrapper">
             <div class="highlight-layer" id="leftHighlightLayer"></div>
-            <textarea class="text-area" id="leftText" placeholder="粘贴或输入基础文本…" spellcheck="false"></textarea>
+            <div class="text-backdrop" id="leftBackdrop"></div>
+            <textarea class="text-area" id="leftText" spellcheck="false"></textarea>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col" id="rightCol">
+    <div class="col">
       <div class="col-header">
         <span>📝 对比文本</span>
         <span class="count" id="rightCount">0 行</span>
       </div>
-      <div class="text-area-wrap" id="rightWrap">
-        <div class="line-numbered-area" id="rightNumberedArea">
+      <div class="text-area-wrap">
+        <div class="line-numbered-area">
           <div class="line-numbers" id="rightLineNumbers"></div>
           <div class="text-area-wrapper">
             <div class="highlight-layer" id="rightHighlightLayer"></div>
-            <textarea class="text-area" id="rightText" placeholder="粘贴或输入对比文本…" spellcheck="false"></textarea>
+            <div class="text-backdrop" id="rightBackdrop"></div>
+            <textarea class="text-area" id="rightText" spellcheck="false"></textarea>
           </div>
         </div>
       </div>
@@ -447,313 +374,244 @@
     const rightLineNumbers = document.getElementById('rightLineNumbers');
     const leftHighlightLayer = document.getElementById('leftHighlightLayer');
     const rightHighlightLayer = document.getElementById('rightHighlightLayer');
+    const leftBackdrop = document.getElementById('leftBackdrop');
+    const rightBackdrop = document.getElementById('rightBackdrop');
+    
     const diffCountSpan = document.getElementById('diffCount');
     const leftCountSpan = document.getElementById('leftCount');
     const rightCountSpan = document.getElementById('rightCount');
 
-    const compareBtn = document.getElementById('compareBtn');
-    const clearBtn = document.getElementById('clearBtn');
+    const LINE_HEIGHT = 24;
+    const PADDING_TOP = 12;
+    const showInlineDiff = true; 
 
-    // ============================================================
-    // 核心：语义对齐 + 空行位置感知对比
-    // 1. 提取非空行按顺序对齐（数学对数学，语文对语文）
-    // 2. 对齐后，检测每两个相邻非空行之间的空行数量
-    // 3. 如果空行数量不同，在对应位置标记空行差异
-    // ============================================================
+    // 双侧同步滚动状态控制
+    let isCrossSyncScroll = true;
+    let isSyncingLeft = false;
+    let isSyncingRight = false;
+    
+    const syncScrollBtn = document.getElementById('syncScrollBtn');
+    syncScrollBtn.addEventListener('click', function() {
+      isCrossSyncScroll = !isCrossSyncScroll;
+      this.textContent = isCrossSyncScroll ? '🔄 同步滚动：开启' : '⏸️ 同步滚动：关闭';
+      this.classList.toggle('active', !isCrossSyncScroll);
+    });
+
+    // 一键到顶部 / 到底部功能
+    document.getElementById('scrollTopBtn').addEventListener('click', function() {
+      leftText.scrollTo({ top: 0, behavior: 'smooth' });
+      rightText.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('scrollBottomBtn').addEventListener('click', function() {
+      leftText.scrollTo({ top: leftText.scrollHeight, behavior: 'smooth' });
+      rightText.scrollTo({ top: rightText.scrollHeight, behavior: 'smooth' });
+    });
+
+    // 内部对齐滚动 (处理行号和渲染层)
+    function syncInnerScroll(textarea, lineNumbers, backdrop, highlight) {
+      lineNumbers.scrollTop = textarea.scrollTop;
+      backdrop.style.transform = `translate(-${textarea.scrollLeft}px, -${textarea.scrollTop}px)`;
+      highlight.style.transform = `translate(-${textarea.scrollLeft}px, -${textarea.scrollTop}px)`;
+    }
+
+    leftText.addEventListener('scroll', function() {
+      syncInnerScroll(leftText, leftLineNumbers, leftBackdrop, leftHighlightLayer);
+      if (isCrossSyncScroll) {
+        if (!isSyncingLeft) {
+          isSyncingRight = true;
+          rightText.scrollTop = this.scrollTop;
+          rightText.scrollLeft = this.scrollLeft;
+        }
+        isSyncingLeft = false;
+      }
+    });
+
+    rightText.addEventListener('scroll', function() {
+      syncInnerScroll(rightText, rightLineNumbers, rightBackdrop, rightHighlightLayer);
+      if (isCrossSyncScroll) {
+        if (!isSyncingRight) {
+          isSyncingLeft = true;
+          leftText.scrollTop = this.scrollTop;
+          leftText.scrollLeft = this.scrollLeft;
+        }
+        isSyncingRight = false;
+      }
+    });
+
+    function getInlineDiffs(s1, s2) {
+      const len1 = s1.length, len2 = s2.length;
+      const dp = Array(len1 + 1).fill(0).map(() => Array(len2 + 1).fill(0));
+      for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+          if (s1[i - 1] === s2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+          else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+      let i = len1, j = len2;
+      const diffIndices1 = new Set(), diffIndices2 = new Set();
+      while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && s1[i - 1] === s2[j - 1]) { i--; j--; }
+        else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) { diffIndices2.add(--j); }
+        else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) { diffIndices1.add(--i); }
+      }
+      return { diffIndices1, diffIndices2 };
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function updateBackdrop(textarea, backdropDiv, lineDiffsMap) {
+      const lines = textarea.value.split('\n');
+      let html = '';
+      for (let i = 0; i < lines.length; i++) {
+        const lineStr = lines[i];
+        const diffIndices = lineDiffsMap.get(i);
+        if (showInlineDiff && diffIndices && diffIndices.size > 0 && lineStr) {
+          let lineHtml = '';
+          for (let c = 0; c < lineStr.length; c++) {
+            const safeChar = escapeHtml(lineStr[c]);
+            lineHtml += diffIndices.has(c) ? `<span class="inline-diff-char">${safeChar}</span>` : safeChar;
+          }
+          html += `<div>${lineHtml}</div>`;
+        } else {
+          html += `<div>${escapeHtml(lineStr) || ' '}</div>`;
+        }
+      }
+      backdropDiv.innerHTML = html;
+    }
+
+    function addHighlight(layer, lineIndex) {
+      const marker = document.createElement('div');
+      marker.className = 'diff-line-marker';
+      marker.style.top = `${lineIndex * LINE_HEIGHT + PADDING_TOP}px`;
+      layer.appendChild(marker);
+    }
+
+    function updateLineNumbers(textarea, lineNumbersDiv) {
+      const count = Math.max(1, textarea.value.split('\n').length);
+      lineNumbersDiv.innerHTML = Array.from({length: count}, (_, i) => `<span>${i + 1}</span>`).join('');
+    }
+
     function performDiff() {
       const leftFullLines = leftText.value.split('\n');
       const rightFullLines = rightText.value.split('\n');
 
-      clearHighlights();
-      updateCounts();
+      leftHighlightLayer.innerHTML = '';
+      rightHighlightLayer.innerHTML = '';
+      leftCountSpan.textContent = `${leftFullLines.length} 行`;
+      rightCountSpan.textContent = `${rightFullLines.length} 行`;
+      
       updateLineNumbers(leftText, leftLineNumbers);
       updateLineNumbers(rightText, rightLineNumbers);
 
-      // ---- 第一步：提取非空行及其位置 ----
-      function extractContent(lines) {
-        const result = [];
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].trim() !== '') {
-            result.push({ line: lines[i], index: i });
-          }
-        }
-        return result;
-      }
-
+      const extractContent = lines => lines.map((line, index) => ({ line, index })).filter(item => item.line.trim() !== '');
       const leftContent = extractContent(leftFullLines);
       const rightContent = extractContent(rightFullLines);
 
-      // ---- 第二步：按顺序对齐非空行，标记内容差异 ----
-      const leftStyle = window.getComputedStyle(leftText);
-      const rightStyle = window.getComputedStyle(rightText);
-      const leftLineHeight = parseFloat(leftStyle.lineHeight) || parseFloat(leftStyle.fontSize) * 1.6;
-      const rightLineHeight = parseFloat(rightStyle.lineHeight) || parseFloat(rightStyle.fontSize) * 1.6;
-      const leftPaddingTop = parseFloat(leftStyle.paddingTop) || 0;
-      const rightPaddingTop = parseFloat(rightStyle.paddingTop) || 0;
-
       let diffCount = 0;
       const minLen = Math.min(leftContent.length, rightContent.length);
+      const leftLineDiffsMap = new Map(), rightLineDiffsMap = new Map();
 
-      // 用于记录哪些非空行已经被匹配
-      const leftMatched = new Array(leftContent.length).fill(false);
-      const rightMatched = new Array(rightContent.length).fill(false);
-
-      // 按位置匹配非空行
       for (let i = 0; i < minLen; i++) {
-        const leftItem = leftContent[i];
-        const rightItem = rightContent[i];
-        if (leftItem.line !== rightItem.line) {
+        if (leftContent[i].line !== rightContent[i].line) {
           diffCount++;
-          addHighlight(leftHighlightLayer, leftItem.index, leftLineHeight, leftPaddingTop);
-          addHighlight(rightHighlightLayer, rightItem.index, rightLineHeight, rightPaddingTop);
+          if (showInlineDiff) {
+            const res = getInlineDiffs(leftContent[i].line, rightContent[i].line);
+            leftLineDiffsMap.set(leftContent[i].index, res.diffIndices1);
+            rightLineDiffsMap.set(rightContent[i].index, res.diffIndices2);
+          }
+          addHighlight(leftHighlightLayer, leftContent[i].index);
+          addHighlight(rightHighlightLayer, rightContent[i].index);
         }
-        leftMatched[i] = true;
-        rightMatched[i] = true;
       }
 
-      // 处理左侧多余的非空行
       for (let i = minLen; i < leftContent.length; i++) {
-        diffCount++;
-        addHighlight(leftHighlightLayer, leftContent[i].index, leftLineHeight, leftPaddingTop);
+        diffCount++; addHighlight(leftHighlightLayer, leftContent[i].index);
       }
-
-      // 处理右侧多余的非空行
       for (let i = minLen; i < rightContent.length; i++) {
-        diffCount++;
-        addHighlight(rightHighlightLayer, rightContent[i].index, rightLineHeight, rightPaddingTop);
+        diffCount++; addHighlight(rightHighlightLayer, rightContent[i].index);
       }
 
-      // ---- 第三步：检测空行位置差异 ----
-      // 在每两个相邻的非空行之间，检查空行数量是否一致
-      function getBlankLinesBetween(lines, contentItems, fromIdx, toIdx) {
-        // fromIdx 和 toIdx 是 contentItems 的索引
-        const startIdx = contentItems[fromIdx].index;
-        const endIdx = contentItems[toIdx].index;
-        let blankCount = 0;
-        for (let i = startIdx + 1; i < endIdx; i++) {
-          if (lines[i].trim() === '') {
-            blankCount++;
-          }
-        }
-        return blankCount;
-      }
-
-      // 获取某一侧从 startContentIdx 到 endContentIdx 之间的空行行号列表（用于高亮）
-      function getBlankLineIndices(lines, contentItems, fromIdx, toIdx) {
-        const startIdx = contentItems[fromIdx].index;
-        const endIdx = contentItems[toIdx].index;
+      const getBlankLineIndices = (lines, contentItems, fromIdx, toIdx) => {
         const indices = [];
-        for (let i = startIdx + 1; i < endIdx; i++) {
-          if (lines[i].trim() === '') {
-            indices.push(i);
-          }
+        for (let i = contentItems[fromIdx].index + 1; i < contentItems[toIdx].index; i++) {
+          if (lines[i].trim() === '') indices.push(i);
         }
         return indices;
-      }
+      };
 
-      // 对比每一对相邻的非空行之间的空行数量
-      const leftPairCount = Math.max(0, leftContent.length - 1);
-      const rightPairCount = Math.max(0, rightContent.length - 1);
-      const maxPairs = Math.max(leftPairCount, rightPairCount);
-
+      const maxPairs = Math.max(leftContent.length - 1, rightContent.length - 1);
       for (let p = 0; p < maxPairs; p++) {
-        // 如果两侧都有这对相邻非空行
-        if (p < leftPairCount && p < rightPairCount) {
-          const leftBlankCount = getBlankLinesBetween(leftFullLines, leftContent, p, p + 1);
-          const rightBlankCount = getBlankLinesBetween(rightFullLines, rightContent, p, p + 1);
-
-          if (leftBlankCount !== rightBlankCount) {
-            // 空行数量不同，标记两侧的空行（取交集或各自标记）
-            const leftBlankIndices = getBlankLineIndices(leftFullLines, leftContent, p, p + 1);
-            const rightBlankIndices = getBlankLineIndices(rightFullLines, rightContent, p, p + 1);
-
-            // 标记左侧空行
-            for (const idx of leftBlankIndices) {
-              diffCount++;
-              addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
-            }
-            // 标记右侧空行
-            for (const idx of rightBlankIndices) {
-              diffCount++;
-              addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
-            }
-          }
-        } else if (p < leftPairCount) {
-          // 左侧有这对，右侧没有（右侧非空行数量少）
-          const leftBlankIndices = getBlankLineIndices(leftFullLines, leftContent, p, p + 1);
-          for (const idx of leftBlankIndices) {
-            diffCount++;
-            addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
-          }
-        } else if (p < rightPairCount) {
-          // 右侧有这对，左侧没有
-          const rightBlankIndices = getBlankLineIndices(rightFullLines, rightContent, p, p + 1);
-          for (const idx of rightBlankIndices) {
-            diffCount++;
-            addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
-          }
+        const leftBlankIndices = (p < leftContent.length - 1) ? getBlankLineIndices(leftFullLines, leftContent, p, p + 1) : [];
+        const rightBlankIndices = (p < rightContent.length - 1) ? getBlankLineIndices(rightFullLines, rightContent, p, p + 1) : [];
+        
+        if (leftBlankIndices.length !== rightBlankIndices.length) {
+          leftBlankIndices.forEach(idx => { diffCount++; addHighlight(leftHighlightLayer, idx); });
+          rightBlankIndices.forEach(idx => { diffCount++; addHighlight(rightHighlightLayer, idx); });
         }
       }
 
-      // ---- 第四步：处理开头和结尾的空行 ----
-      // 开头空行
-      const leftLeadingBlanks = [];
-      for (let i = 0; i < leftFullLines.length; i++) {
-        if (leftFullLines[i].trim() === '') leftLeadingBlanks.push(i);
-        else break;
-      }
-      const rightLeadingBlanks = [];
-      for (let i = 0; i < rightFullLines.length; i++) {
-        if (rightFullLines[i].trim() === '') rightLeadingBlanks.push(i);
-        else break;
-      }
-      if (leftLeadingBlanks.length !== rightLeadingBlanks.length) {
-        for (const idx of leftLeadingBlanks) {
-          diffCount++;
-          addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
-        }
-        for (const idx of rightLeadingBlanks) {
-          diffCount++;
-          addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
-        }
-      }
+      const checkEdgeBlanks = (leftLines, rightLines, isTrailing) => {
+        const leftBlanks = [], rightBlanks = [];
+        const iter = isTrailing 
+          ? { start: leftLines.length - 1, step: -1, condition: i => i >= 0 }
+          : { start: 0, step: 1, condition: i => i < leftLines.length };
 
-      // 结尾空行
-      const leftTrailingBlanks = [];
-      for (let i = leftFullLines.length - 1; i >= 0; i--) {
-        if (leftFullLines[i].trim() === '') leftTrailingBlanks.push(i);
-        else break;
-      }
-      const rightTrailingBlanks = [];
-      for (let i = rightFullLines.length - 1; i >= 0; i--) {
-        if (rightFullLines[i].trim() === '') rightTrailingBlanks.push(i);
-        else break;
-      }
-      if (leftTrailingBlanks.length !== rightTrailingBlanks.length) {
-        for (const idx of leftTrailingBlanks) {
-          diffCount++;
-          addHighlight(leftHighlightLayer, idx, leftLineHeight, leftPaddingTop);
+        for (let i = iter.start; iter.condition(i); i += iter.step) {
+          if (leftLines[i].trim() === '') leftBlanks.push(i); else break;
         }
-        for (const idx of rightTrailingBlanks) {
-          diffCount++;
-          addHighlight(rightHighlightLayer, idx, rightLineHeight, rightPaddingTop);
+        
+        const rIter = isTrailing 
+          ? { start: rightLines.length - 1, step: -1, condition: i => i >= 0 }
+          : { start: 0, step: 1, condition: i => i < rightLines.length };
+          
+        for (let i = rIter.start; rIter.condition(i); i += rIter.step) {
+          if (rightLines[i].trim() === '') rightBlanks.push(i); else break;
         }
-      }
+
+        if (leftBlanks.length !== rightBlanks.length) {
+          leftBlanks.forEach(idx => { diffCount++; addHighlight(leftHighlightLayer, idx); });
+          rightBlanks.forEach(idx => { diffCount++; addHighlight(rightHighlightLayer, idx); });
+        }
+      };
+
+      checkEdgeBlanks(leftFullLines, rightFullLines, false);
+      checkEdgeBlanks(leftFullLines, rightFullLines, true);
 
       diffCountSpan.textContent = diffCount;
-    }
-
-    // ----- 辅助函数 -----
-    function updateLineNumbers(textarea, lineNumbersDiv) {
-      const lines = textarea.value.split('\n');
-      const lineCount = lines.length;
-      let html = '';
-      for (let i = 1; i <= lineCount; i++) {
-        html += `<span>${i}</span>`;
-      }
-      if (lineCount === 0) {
-        html = '<span>1</span>';
-      }
-      lineNumbersDiv.innerHTML = html;
-    }
-
-    function updateCounts() {
-      const leftLines = leftText.value.split('\n');
-      const rightLines = rightText.value.split('\n');
-      leftCountSpan.textContent = `${leftLines.length} 行`;
-      rightCountSpan.textContent = `${rightLines.length} 行`;
-    }
-
-    function clearHighlights() {
-      leftHighlightLayer.innerHTML = '';
-      rightHighlightLayer.innerHTML = '';
-    }
-
-    function syncScroll(textarea, lineNumbersDiv) {
-      if (lineNumbersDiv) {
-        lineNumbersDiv.scrollTop = textarea.scrollTop;
-      }
-    }
-
-    function addHighlight(layer, lineIndex, lineHeight, paddingTop) {
-      const marker = document.createElement('div');
-      marker.className = 'diff-line-marker';
-      marker.style.position = 'absolute';
-      marker.style.left = '0px';
-      marker.style.right = '0px';
-      marker.style.top = `${lineIndex * lineHeight + paddingTop}px`;
-      marker.style.height = `${lineHeight}px`;
-      marker.style.backgroundColor = 'rgba(255, 215, 0, 0.35)';
-      marker.style.borderLeft = '4px solid #e6a100';
-      marker.style.borderRadius = '0 6px 6px 0';
-      marker.style.pointerEvents = 'none';
-      marker.style.zIndex = '1';
-      layer.appendChild(marker);
+      updateBackdrop(leftText, leftBackdrop, leftLineDiffsMap);
+      updateBackdrop(rightText, rightBackdrop, rightLineDiffsMap);
     }
 
     function refreshDiff() {
       performDiff();
-      syncScroll(leftText, leftLineNumbers);
-      syncScroll(rightText, rightLineNumbers);
+      syncInnerScroll(leftText, leftLineNumbers, leftBackdrop, leftHighlightLayer);
+      syncInnerScroll(rightText, rightLineNumbers, rightBackdrop, rightHighlightLayer);
     }
 
     function clearAll() {
       leftText.value = '';
       rightText.value = '';
-      clearHighlights();
-      updateCounts();
-      updateLineNumbers(leftText, leftLineNumbers);
-      updateLineNumbers(rightText, rightLineNumbers);
-      diffCountSpan.textContent = '0';
+      refreshDiff();
     }
 
-    // ----- 事件绑定 -----
-    compareBtn.addEventListener('click', refreshDiff);
-
-    clearBtn.addEventListener('click', function() {
-      clearAll();
-    });
+    document.getElementById('compareBtn').addEventListener('click', refreshDiff);
+    document.getElementById('clearBtn').addEventListener('click', clearAll);
 
     let inputTimer;
-    function autoDiff() {
-      clearTimeout(inputTimer);
-      inputTimer = setTimeout(function() {
-        refreshDiff();
-      }, 300);
-    }
-
-    leftText.addEventListener('input', function() {
-      autoDiff();
-      updateLineNumbers(leftText, leftLineNumbers);
-      syncScroll(leftText, leftLineNumbers);
+    [leftText, rightText].forEach(textarea => {
+      textarea.addEventListener('input', () => {
+        clearTimeout(inputTimer);
+        inputTimer = setTimeout(refreshDiff, 300);
+        updateLineNumbers(textarea, textarea === leftText ? leftLineNumbers : rightLineNumbers);
+        const backdrop = textarea === leftText ? leftBackdrop : rightBackdrop;
+        backdrop.innerHTML = textarea.value.split('\n').map(l => `<div>${escapeHtml(l) || ' '}</div>`).join('');
+      });
     });
 
-    rightText.addEventListener('input', function() {
-      autoDiff();
-      updateLineNumbers(rightText, rightLineNumbers);
-      syncScroll(rightText, rightLineNumbers);
-    });
-
-    leftText.addEventListener('scroll', function() {
-      syncScroll(leftText, leftLineNumbers);
-    });
-
-    rightText.addEventListener('scroll', function() {
-      syncScroll(rightText, rightLineNumbers);
-    });
-
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        refreshDiff();
-      }, 200);
-    });
-
-    // 初始化：完全空白
     clearAll();
-
-    console.log('✅ 语义对齐 + 空行感知文本对比工具已启动');
   })();
 </script>
 </body>
