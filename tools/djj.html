@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管道叠加角计算器 - 管道计算工具箱</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --surface: #f1f5f9;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .card {
+            max-width: 560px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* 返回主页按钮样式 */
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            transition: color 0.2s;
+        }
+
+        .nav-back:hover {
+            color: var(--primary);
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .field label {
+            width: 100px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .field label i {
+            font-style: normal;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .field input[type="number"] {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        .field input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 12px 14px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .radio-group > span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .radio-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .radio-options input[type="radio"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .result-panel {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .result-panel:hover {
+            border-color: var(--primary);
+        }
+
+        .result-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-value small {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-left: 4px;
+            font-weight: 400;
+        }
+
+        .copy-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-copy {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #bae6fd;
+        }
+
+        .footnote {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .field {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .radio-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .result-panel {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- 返回主页按钮 -->
+    <a href="../" class="nav-back">← 返回工具箱主页</a>
+
+    <div class="header">
+        <h1>管道叠加角计算器</h1>
+        <div class="subhead">
+            γ = arccos( cosα · cosβ · cosθ <span id="signDisplay">+</span> sinα · sinβ )
+        </div>
+    </div>
+
+    <div class="input-group">
+        <div class="field">
+            <label>α 前坡角 <i>°</i></label>
+            <input type="number" id="alpha" placeholder="0 ~ 180" step="any" value="30" min="0" max="180">
+        </div>
+        <div class="field">
+            <label>β 后坡角 <i>°</i></label>
+            <input type="number" id="beta" placeholder="0 ~ 180" step="any" value="45" min="0" max="180">
+        </div>
+        <div class="field">
+            <label>θ 水平转角 <i>°</i></label>
+            <input type="number" id="theta" placeholder="0 ~ 360" step="any" value="60" min="0" max="360">
+        </div>
+    </div>
+
+    <div class="radio-group">
+        <span>坡角方向</span>
+        <div class="radio-options">
+            <label>
+                <input type="radio" name="direction" value="same" checked> 
+                同向 (+)
+            </label>
+            <label>
+                <input type="radio" name="direction" value="opposite"> 
+                反向 (−)
+            </label>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="calcBtn">计算</button>
+        <button class="btn btn-secondary" id="resetBtn">恢复默认</button>
+    </div>
+
+    <div class="result-panel" id="resultPanel" title="点击面板也可复制">
+        <span class="result-label">最终叠加角 γ</span>
+        <span class="result-value" id="gammaDisplay">—<small>°</small></span>
+    </div>
+
+    <div class="copy-btn-container">
+        <button class="btn-copy" id="copyBtn">📋 复制计算结果</button>
+    </div>
+
+    <div class="footnote">
+        提示：输入框获得焦点时会自动全选，方便直接输入新数值。
+    </div>
+</div>
+
+<script>
+    (function() {
+        const alphaInput = document.getElementById('alpha');
+        const betaInput = document.getElementById('beta');
+        const thetaInput = document.getElementById('theta');
+        const sameRadio = document.querySelector('input[name="direction"][value="same"]');
+        const oppositeRadio = document.querySelector('input[name="direction"][value="opposite"]');
+        const gammaDisplay = document.getElementById('gammaDisplay');
+        const signDisplay = document.getElementById('signDisplay');
+        const calcBtn = document.getElementById('calcBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultPanel = document.getElementById('resultPanel');
+        const copyBtn = document.getElementById('copyBtn');
+
+        let rawGammaValue = null;
+
+        function degToRad(deg) {
+            return deg * Math.PI / 180;
+        }
+
+        function computeGamma(alphaDeg, betaDeg, thetaDeg, isSameDirection) {
+            if (isNaN(alphaDeg) || isNaN(betaDeg) || isNaN(thetaDeg)) return null;
+            if (alphaDeg < 0 || alphaDeg > 180 || betaDeg < 0 || betaDeg > 180 || thetaDeg < 0 || thetaDeg > 360) {
+                return null;
+            }
+
+            const alphaRad = degToRad(alphaDeg);
+            const betaRad = degToRad(betaDeg);
+            const thetaRad = degToRad(thetaDeg);
+
+            const cosA = Math.cos(alphaRad);
+            const cosB = Math.cos(betaRad);
+            const cosT = Math.cos(thetaRad);
+            const sinA = Math.sin(alphaRad);
+            const sinB = Math.sin(betaRad);
+
+            const sign = isSameDirection ? 1 : -1;
+            const inner = cosA * cosB * cosT + sign * sinA * sinB;
+
+            let clamped = Math.min(1, Math.max(-1, inner));
+            const gammaRad = Math.acos(clamped);
+            const gammaDeg = gammaRad * 180 / Math.PI;
+            
+            return Math.round(gammaDeg * 1e6) / 1e6;
+        }
+
+        function updateCalculation() {
+            const alpha = parseFloat(alphaInput.value);
+            const beta = parseFloat(betaInput.value);
+            const theta = parseFloat(thetaInput.value);
+            const isSame = sameRadio.checked;
+
+            signDisplay.textContent = isSame ? '+' : '−';
+
+            if (isNaN(alpha) || isNaN(beta) || isNaN(theta)) {
+                gammaDisplay.innerHTML = '—<small>°</small>';
+                rawGammaValue = null;
+                return;
+            }
+
+            if (alpha < 0 || alpha > 180 || beta < 0 || beta > 180 || theta < 0 || theta > 360) {
+                gammaDisplay.innerHTML = '范围错误';
+                gammaDisplay.style.fontSize = '1.2rem';
+                gammaDisplay.style.color = '#ef4444';
+                rawGammaValue = null;
+                return;
+            } else {
+                gammaDisplay.style.fontSize = '2rem';
+                gammaDisplay.style.color = 'var(--primary)';
+            }
+
+            const gamma = computeGamma(alpha, beta, theta, isSame);
+            if (gamma === null || !isFinite(gamma)) {
+                gammaDisplay.innerHTML = '无效';
+                rawGammaValue = null;
+            } else {
+                const formatted = gamma.toFixed(4).replace(/\.?0+$/, '');
+                gammaDisplay.innerHTML = `${formatted}<small>°</small>`;
+                rawGammaValue = formatted;
+            }
+        }
+
+        function resetToDefault() {
+            alphaInput.value = '30';
+            betaInput.value = '45';
+            thetaInput.value = '60';
+            sameRadio.checked = true;
+            updateCalculation();
+        }
+
+        function copyResult() {
+            if (rawGammaValue !== null) {
+                navigator.clipboard.writeText(rawGammaValue).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✓ 复制成功！';
+                    copyBtn.style.background = '#dcfce7';
+                    copyBtn.style.color = '#15803d';
+                    copyBtn.style.borderColor = '#bbf7d0';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.background = '#e0f2fe';
+                        copyBtn.style.color = '#0369a1';
+                        copyBtn.style.borderColor = '#bae6fd';
+                    }, 1200);
+                }).catch(err => {
+                    console.error('复制失败', err);
+                });
+            }
+        }
+
+        copyBtn.addEventListener('click', copyResult);
+        resultPanel.addEventListener('click', copyResult);
+
+        calcBtn.addEventListener('click', updateCalculation);
+        resetBtn.addEventListener('click', resetToDefault);
+
+        [alphaInput, betaInput, thetaInput].forEach(input => {
+            input.addEventListener('focus', function() {
+                this.select();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    updateCalculation();
+                }
+            });
+        });
+
+        sameRadio.addEventListener('change', updateCalculation);
+        oppositeRadio.addEventListener('change', updateCalculation);
+
+        updateCalculation();
+    })();
+</script>
+</body>
+</html>
