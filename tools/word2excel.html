@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word表格 → 智能Excel（XLSX导出 · 居中与全网格边框）</title>
+    <!-- 引入完全支持样式和标准方法的 xlsx-js-style 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: #f5f7fb;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 1rem 1rem 0.5rem;
+            flex-shrink: 0;
+            position: relative; /* 用于绝对定位“回到主页”按钮 */
+        }
+
+        /* 回到主页按钮样式（参考差异工具） */
+        .home-link {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: #ffffff;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.3rem 1rem 0.3rem 0.9rem;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid #e2e8f0;
+            transition: 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            z-index: 10;
+        }
+        .home-link:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: scale(1.02);
+        }
+        .home-link svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: #1e293b;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        header h1 {
+            margin: 0 0 6px;
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 1.5rem;
+        }
+        header p {
+            margin: 0;
+            color: #475569;
+            font-size: 0.85rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 主容器：占满剩余高度，不出现页面滚动 */
+        .container {
+            display: flex;
+            gap: 16px;
+            padding: 12px 20px 20px;
+            flex: 1;
+            min-height: 0;
+            max-width: 1800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* 面板头部固定 */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px 10px;
+            flex-shrink: 0;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .panel-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .badge {
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 30px;
+        }
+        .left-panel .panel-header h2::before { content: "📋"; font-size: 1.1rem; }
+        .right-panel .panel-header h2::before { content: "📊"; font-size: 1.1rem; }
+
+        /* 粘贴区：内部滚动，撑满中间 */
+        .paste-area {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 12px;
+            background: #f8fafc;
+            font-size: 0.92rem;
+            transition: background 0.2s;
+        }
+        .paste-area:focus-within {
+            background: #ffffff;
+        }
+        .paste-area[contenteditable="true"]:empty:before {
+            content: attr(placeholder);
+            color: #94a3b8;
+            font-style: italic;
+            pointer-events: none;
+        }
+        .paste-area table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .paste-area td, .paste-area th {
+            border: 1px solid #64748b;
+            padding: 6px 8px;
+            vertical-align: middle;
+            text-align: center;
+            min-width: 50px;
+            word-break: break-word;
+            background-color: white;
+        }
+        .paste-area th {
+            background: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Excel 表格容器：内部滚动 */
+        .excel-container {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            background: white;
+        }
+        /* Excel风格表格：完整框线与居中 */
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            table-layout: auto;
+            min-width: 100%;
+        }
+        .excel-table th, .excel-table td {
+            border: 1px solid #64748b;
+            padding: 6px 9px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        .excel-table th {
+            background: #ffffff;
+            font-weight: 600;
+            color: #0f172a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .excel-table td.number-cell {
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-weight: 500;
+        }
+        .excel-table td.fraction-cell {
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+            background: #fefce8;
+        }
+
+        /* 底部操作栏 */
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            flex-shrink: 0;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            border: none;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .btn:hover { background: #e2e8f0; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 3px 8px rgba(37,99,235,0.2);
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-success {
+            background: #0f172a;
+            color: white;
+        }
+        .btn-success:hover { background: #1e293b; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-outline:hover { background: #f8fafc; }
+        .btn:disabled { opacity: 0.5; pointer-events: none; }
+
+        .status-text {
+            font-size: 0.8rem;
+            color: #475569;
+            margin-left: auto;
+            background: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+
+        .empty-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 200px;
+            color: #94a3b8;
+            font-style: italic;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .empty-message span { font-size: 1.8rem; opacity: 0.5; }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://zetalin.top/tools" class="home-link" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            回到主页
+        </a>
+        <h1>📄 Word表格 → 智能Excel（XLSX导出 · 居中与全网格边框）</h1>
+        <p>粘贴Word表格内容，右侧自动生成Excel风格表格。所有单元格文字<strong>默认强制居中对齐</strong>；分数如 <strong>8/1、1/2</strong> 保留为文本，绝不转日期。全表格自带完整网格框线，无表头底色，一键导出 XLSX。</p>
+    </header>
+
+    <div class="container">
+        <!-- 左侧：粘贴区 -->
+        <div class="panel left-panel">
+            <div class="panel-header">
+                <h2>从Word粘贴</h2>
+                <span class="badge">支持带格式表格</span>
+            </div>
+            <!-- 中部滚动区 -->
+            <div id="pasteArea" class="paste-area" contenteditable="true" placeholder="点击此处，然后按 Ctrl+V 粘贴Word表格内容...">
+                <table>
+                    <thead>
+                        <tr><th>项目</th><th>数值A</th><th>数值B</th><th>分数</th><th>日期型分数</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>苹果</td><td>1.2</td><td>255</td><td>1/2</td><td>8/1</td></tr>
+                        <tr><td>香蕉</td><td>3.45</td><td>1000</td><td>3/4</td><td>12/5</td></tr>
+                        <tr><td>橙子</td><td>0.5</td><td>42</td><td>5/8</td><td>1/1</td></tr>
+                        <tr><td>西瓜</td><td>2.75</td><td>888</td><td>7/8</td><td>9/3</td></tr>
+                        <tr><td>葡萄</td><td>1.05</td><td>66</td><td>2/3</td><td>4/2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 底部按钮 -->
+            <div class="actions-bar">
+                <button class="btn btn-outline" id="clearBtn">🧹 清空</button>
+                <button class="btn btn-primary" id="convertBtn">⚡ 生成Excel表格</button>
+            </div>
+        </div>
+
+        <!-- 右侧：Excel预览 -->
+        <div class="panel right-panel">
+            <div class="panel-header">
+                <h2>Excel 预览</h2>
+                <span class="badge" id="cellCount">0 行 0 列</span>
+            </div>
+            <div class="excel-container" id="excelContainer">
+                <div class="empty-message">
+                    <span>📋</span>
+                    粘贴表格后点击「生成Excel表格」
+                </div>
+            </div>
+            <!-- 底部按钮 -->
+            <div class="actions-bar">
+                <button class="btn btn-success" id="exportBtn" disabled>⬇️ 导出 XLSX</button>
+                <span class="status-text" id="statusMsg">就绪</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const pasteArea = document.getElementById('pasteArea');
+            const convertBtn = document.getElementById('convertBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const excelContainer = document.getElementById('excelContainer');
+            const cellCountSpan = document.getElementById('cellCount');
+            const statusMsg = document.getElementById('statusMsg');
+
+            let currentTableData = [];
+
+            // ---------- 工具函数 ----------
+            function isNumericValue(str) {
+                if (typeof str !== 'string') return false;
+                const trimmed = str.trim();
+                if (trimmed === '') return false;
+                return /^-?\d+(\.\d+)?([eE][-+]?\d+)?$/.test(trimmed);
+            }
+
+            function isFraction(str) {
+                if (typeof str !== 'string') return false;
+                const trimmed = str.trim();
+                if (trimmed === '') return false;
+                return /^-?\d+\/\d+$/.test(trimmed);
+            }
+
+            function analyzeCell(cellText) {
+                const trimmed = cellText.trim();
+                if (trimmed === '') return { display: '', type: 'text', original: '' };
+
+                if (isFraction(trimmed)) {
+                    return { display: trimmed, type: 'fraction', original: trimmed };
+                }
+                if (isNumericValue(trimmed)) {
+                    return { display: trimmed, type: 'number', original: trimmed };
+                }
+                return { display: cellText, type: 'text', original: cellText };
+            }
+
+            function extractTableFromPasteArea() {
+                const table = pasteArea.querySelector('table');
+                if (table) {
+                    const rows = [];
+                    const trs = table.querySelectorAll('tr');
+                    trs.forEach(tr => {
+                        const rowData = [];
+                        const cells = tr.querySelectorAll('td, th');
+                        cells.forEach(cell => {
+                            let text = cell.innerText || cell.textContent || '';
+                            text = text.replace(/\s+/g, ' ').trim();
+                            rowData.push(text);
+                        });
+                        if (rowData.length > 0) rows.push(rowData);
+                    });
+                    if (rows.length > 0) return rows;
+                }
+
+                const rawText = pasteArea.innerText || '';
+                if (!rawText.trim()) return [];
+
+                const lines = rawText.split(/\r?\n/).filter(line => line.trim() !== '');
+                return lines.map(line => {
+                    let cells = line.split('\t');
+                    if (cells.length === 1) cells = line.split(/\s{2,}/);
+                    return cells.map(c => c.trim());
+                });
+            }
+
+            function renderExcelTable(data) {
+                if (!data || data.length === 0) {
+                    excelContainer.innerHTML = `<div class="empty-message"><span>📋</span>暂无数据，请粘贴表格后点击生成</div>`;
+                    cellCountSpan.textContent = `0 行 0 列`;
+                    exportBtn.disabled = true;
+                    return;
+                }
+
+                const rowCount = data.length;
+                const colCount = Math.max(...data.map(row => row.length), 0);
+
+                let html = '<table class="excel-table">';
+                for (let r = 0; r < rowCount; r++) {
+                    html += '<tr>';
+                    const row = data[r];
+                    for (let c = 0; c < colCount; c++) {
+                        const cellText = row[c] !== undefined ? row[c] : '';
+                        const analysis = analyzeCell(cellText);
+                        let cellClass = '';
+                        if (analysis.type === 'number') cellClass = 'number-cell';
+                        else if (analysis.type === 'fraction') cellClass = 'fraction-cell';
+                        else cellClass = 'text-cell';
+                        html += `<td class="${cellClass}">${escapeHtml(analysis.display)}</td>`;
+                    }
+                    html += '</tr>';
+                }
+                html += '</table>';
+
+                excelContainer.innerHTML = html;
+                cellCountSpan.textContent = `${rowCount} 行 ${colCount} 列`;
+                exportBtn.disabled = false;
+                statusMsg.textContent = `已生成 ${rowCount} 行 × ${colCount} 列`;
+            }
+
+            function escapeHtml(text) {
+                if (!text && text !== 0) return '';
+                return String(text).replace(/[&<>"']/g, m => {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    if (m === '"') return '&quot;';
+                    if (m === "'") return '&#39;';
+                    return m;
+                });
+            }
+
+            function convertAndRender() {
+                try {
+                    const rawData = extractTableFromPasteArea();
+                    if (!rawData || rawData.length === 0) {
+                        statusMsg.textContent = '⚠️ 未检测到表格数据';
+                        excelContainer.innerHTML = `<div class="empty-message"><span>⚠️</span>没有检测到表格，请粘贴有效内容</div>`;
+                        cellCountSpan.textContent = `0 行 0 列`;
+                        exportBtn.disabled = true;
+                        currentTableData = [];
+                        return;
+                    }
+
+                    const maxCols = Math.max(...rawData.map(row => row.length), 0);
+                    const normalizedData = rawData.map(row => {
+                        const newRow = [...row];
+                        while (newRow.length < maxCols) newRow.push('');
+                        return newRow.map(cell => typeof cell === 'string' ? cell.trim() : String(cell).trim());
+                    });
+
+                    currentTableData = normalizedData;
+                    renderExcelTable(normalizedData);
+                    statusMsg.textContent = `✅ 已转换 ${normalizedData.length} 行 × ${maxCols} 列`;
+                } catch (error) {
+                    console.error(error);
+                    statusMsg.textContent = '❌ 转换出错';
+                }
+            }
+
+            // ---------- 导出 XLSX（统一样式：无表头底色、强制居中、全网格边框） ----------
+            function exportToXLSX() {
+                if (!currentTableData || currentTableData.length === 0) {
+                    statusMsg.textContent = '⚠️ 没有可导出的数据';
+                    return;
+                }
+
+                try {
+                    const maxCols = Math.max(...currentTableData.map(row => row.length), 0);
+                    const wsData = [];
+
+                    for (let r = 0; r < currentTableData.length; r++) {
+                        const row = currentTableData[r];
+                        const wsRow = [];
+                        for (let c = 0; c < maxCols; c++) {
+                            const cellValue = row[c] !== undefined ? row[c] : '';
+                            const analysis = analyzeCell(cellValue);
+                            if (analysis.type === 'number') {
+                                const num = Number(analysis.original);
+                                wsRow.push(isNaN(num) ? analysis.original : num);
+                            } else {
+                                wsRow.push(analysis.original);
+                            }
+                        }
+                        wsData.push(wsRow);
+                    }
+
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+                    // 遍历所有单元格，注入居中对齐、全网格细边框（表头不设背景色）
+                    const range = XLSX.utils.decode_range(ws['!ref'] || "A1");
+                    for (let R = range.s.r; R <= range.e.r; ++R) {
+                        for (let C = range.s.c; C <= range.e.c; ++C) {
+                            const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                            if (!ws[cellAddress]) {
+                                ws[cellAddress] = { t: 's', v: '' };
+                            }
+
+                            // 单元格样式
+                            ws[cellAddress].s = {
+                                alignment: {
+                                    horizontal: "center", // 水平居中
+                                    vertical: "center",   // 垂直居中
+                                    wrapText: true        // 自动换行
+                                },
+                                border: {
+                                    top:    { style: 'thin', color: { rgb: "64748B" } },
+                                    bottom: { style: 'thin', color: { rgb: "64748B" } },
+                                    left:   { style: 'thin', color: { rgb: "64748B" } },
+                                    right:  { style: 'thin', color: { rgb: "64748B" } }
+                                }
+                            };
+
+                            // 如果是表头（第一行），仅保留加粗，不设任何底色
+                            if (R === 0) {
+                                ws[cellAddress].s.font = { bold: true, color: { rgb: "0F172A" } };
+                            }
+                        }
+                    }
+
+                    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+                    // 导出为带样式的 xlsx 文件
+                    XLSX.writeFile(wb, `Word表格居中对齐导出_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`);
+
+                    statusMsg.textContent = '📁 已成功导出 XLSX（无表头底色、含完整边框与强制居中）';
+                } catch (error) {
+                    console.error(error);
+                    statusMsg.textContent = '❌ 导出失败：' + error.message;
+                }
+            }
+
+            function clearPasteArea() {
+                pasteArea.innerHTML = '';
+                statusMsg.textContent = '已清空粘贴区';
+            }
+
+            function init() {
+                convertBtn.addEventListener('click', convertAndRender);
+                exportBtn.addEventListener('click', exportToXLSX);
+                clearBtn.addEventListener('click', clearPasteArea);
+                convertAndRender();
+            }
+
+            window.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+</body>
+</html>
