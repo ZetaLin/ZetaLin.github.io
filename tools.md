@@ -10,7 +10,7 @@ Hello!下面是一些常用的小工具，分享给大家！
 
 ## 实用工具集（原创开发）
 1. [📄 智能文本对比工具（行级差异高亮，支持双栏对比与行号显示）](https://zetalin.top/tools/compare)
-2. [Word表格转Excel表格](https://zetalin.top/tools/compare)
+2. [▦ Word表格转Excel表格（不强制转换为日期，数字保留数值格式）](https://zetalin.top/tools/compare)
   
 ## 常用工具（收集于互联网）
 1. [Everything.zip（电脑文件搜索软件）](https://www.voidtools.com/zh-cn/downloads/)
